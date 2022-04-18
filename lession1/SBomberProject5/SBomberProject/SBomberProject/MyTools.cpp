@@ -1,14 +1,13 @@
-
 #include <conio.h>
 #include <windows.h>
 #include <stdint.h>
 #include <time.h> 
-
+#include <stdio.h>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <chrono>
-
+#include <numeric>
 
 #include "MyTools.h"
 
@@ -25,7 +24,7 @@ namespace MyTools {
         system("cls");
     }
 
-    void __fastcall GotoXY(double x, double y)
+    void GotoXY(double x, double y)
     {
         const COORD cc = { short(x), short(y) };
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cc);
@@ -62,7 +61,7 @@ namespace MyTools {
         return 0;
     }
 
-    void SetColor(ConsoleColor color)
+    void  SetColor(ConsoleColor color)
     {
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
         SetConsoleTextAttribute(hConsole, color); // color =  (WORD)((BackgroundColor << 4) | TextColor))
@@ -70,12 +69,25 @@ namespace MyTools {
 
     //=============================================================================================
 
-    void __fastcall OpenLogFile(const string& FN)
+    /*void __fastcall OpenLogFile(const string& FN)
     {
         logOut.open(FN, ios_base::out);
+    }*/
+
+    void FileLoggerSingleton::OpenLogFile(const std::string& FN)
+    {
+        logOut.open(FN, std::ios_base::out);
     }
 
-    void CloseLogFile()
+    /*void CloseLogFile()
+    {
+        if (logOut.is_open())
+        {
+            logOut.close();
+        }
+    }*/
+
+    void FileLoggerSingleton::CloseLogFile()
     {
         if (logOut.is_open())
         {
@@ -87,37 +99,98 @@ namespace MyTools {
     {
         auto cur = std::chrono::system_clock::now();
         time_t time = std::chrono::system_clock::to_time_t(cur);
-        char buf[64] = { 0 };
+        char* buf = ctime(&time);
+        return std::string(buf);
+       /* char buf[64] = { 0 };
         ctime_s(buf, 64, &time);
         buf[strlen(buf) - 1] = '\0';
-        return string(buf);
+        return string(buf);*/
     }
 
-    void __fastcall WriteToLog(const string& str)
+   /* void __fastcall WriteToLog(const string& str)
     {
         if (logOut.is_open())
         {
             logOut << GetCurDateTime() << " - " << str << endl;
         }
+    }*/
+    void FileLoggerSingleton::WriteToLog(const std::string& str)
+    {
+        if (logOut.is_open())
+        {
+            logOut << GetCurDateTime() << " - " << str << std::endl;
+        }
     }
 
-    void __fastcall WriteToLog(const string& str, int n)
+    /*void __fastcall WriteToLog(const string& str, int n)
     {
         if (logOut.is_open())
         {
             logOut << GetCurDateTime() << " - " << str << n << endl;
         }
+    }*/
+    void FileLoggerSingleton::WriteToLog(const std::string& str, int n)
+    {
+        if (logOut.is_open())
+        {
+            logOut << GetCurDateTime() << " - " << str << n << std::endl;
+        }
     }
 
-    void __fastcall WriteToLog(const string& str, double d)
+    /*void __fastcall WriteToLog(const string& str, double d)
     {
         if (logOut.is_open())
         {
             logOut << GetCurDateTime() << " - " << str << d << endl;
         }
+    }*/
+    void FileLoggerSingleton::WriteToLog(const std::string& str, double d)
+    {
+        if (logOut.is_open())
+        {
+            logOut << GetCurDateTime() << " - " << str << d << std::endl;
+        }
     }
+    FileLoggerSingleton::~FileLoggerSingleton()
+    {
 
+    }
     //=============================================================================================
+   /* void LoggerSingleton::OpenLogFile(const std::string& FN)
+    {
+        
+        logOut.open(FN, std::ios_base::out);
+    }
+    void LoggerSingleton::CloseLogFile()
+    {
+       
+        if (logOut.is_open())
+        {
+            logOut.close();
+        }
+    }
+    void LoggerSingleton::WriteToLog(const std::string& str)
+    {
+             
+       
+        
+            
+    }
+    void LoggerSingleton::WriteToLog(const std::string& str, int n)
+    {
+        if (logOut.is_open())
+        {
+            logOut << GetCurDateTime() << " - " << str << n << std::endl;
+        }
+    }
+    void LoggerSingleton::WriteToLog(const std::string& str, double d)
+    {
+        if (logOut.is_open())
+        {
+            logOut << GetCurDateTime() << " - " << str << d << std::endl;
+        }
+    }*/
+
 
 
 } // namespace MyTools
