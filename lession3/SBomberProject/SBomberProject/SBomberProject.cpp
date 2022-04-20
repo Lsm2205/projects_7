@@ -1,4 +1,3 @@
-﻿
 #include <conio.h>
 
 #include "SBomber.h"
@@ -10,8 +9,8 @@ using namespace std;
 
 int main(void)
 {
-    MyTools::OpenLogFile("log.txt");
-
+    //MyTools::OpenLogFile("log.txt");
+    MyTools::FileLoggerSingleton::getInstance().OpenLogFile("log.txt");
     SBomber game;
 
     do {
@@ -32,7 +31,7 @@ int main(void)
 
     } while (!game.GetExitFlag());
 
-    MyTools::CloseLogFile();
-
+    //MyTools::CloseLogFile();
+    MyTools::FileLoggerSingleton::getInstance().CloseLogFile();
     return 0;
 }

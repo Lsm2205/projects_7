@@ -1,4 +1,3 @@
-
 #include <iostream>
 
 #include "House.h"
@@ -32,7 +31,7 @@ bool House::isInside(double x1, double x2) const
 
 void House::Draw() const
 {
-	MyTools::SetColor(CC_Yellow);
+	/*MyTools::SetColor(CC_Yellow);
 	GotoXY(x, y - 5);
 	cout << "  ########  ";
 	GotoXY(x, y - 4);
@@ -44,5 +43,14 @@ void House::Draw() const
 	GotoXY(x, y - 1);
 	cout << "#          #";
 	GotoXY(x, y);
-	cout << "############";
+	cout << "############";*/
+
+	for (int i = 0; i < Y; ++i) 
+	{
+		GotoXY(x, y - (Y - i - 1));
+		for (int j = 0; j < X; ++j)
+		{
+			cout << view[i][j];
+		}
+	}
 }

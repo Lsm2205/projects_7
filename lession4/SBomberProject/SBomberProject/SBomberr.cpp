@@ -8,6 +8,8 @@
 #include "Tank.h"
 #include "House.h"
 #include "TankAdapter.h"
+#include "HouseBuilder.h"
+#include "CollisionDetector.h"
 using namespace std;
 using namespace MyTools;
 
@@ -59,11 +61,32 @@ SBomber::SBomber()
     pTank->SetPos(50, groundY - 1);
     vecStaticObj.push_back(pTank);
 
-    House * pHouse = new House;
+    //House * pHouse = new House;
+    HouseDirector director;
+    int hbuild;
+
+    cout << "Create house: \n\n" <<
+
+        "1 with a fence \n" <<
+        "2 without pipe \n" <<
+        "3 without windows \n" <<
+        "4 just a house \n";
+    std::cin >> hbuild;
+    while ((hbuild < 1) || (hbuild > 4))
+    {
+        std::cout << "input error  \n";
+        std::cin >> hbuild;
+    }
+        
+    House* pHouse = director.createHouse(hbuild);
+    if (pHouse == nullptr) {
+        pHouse = new House;
+    }
     pHouse->SetWidth(13);
     pHouse->SetPos(80, groundY - 1);
     vecStaticObj.push_back(pHouse);
-
+    collision = new Win_Collision_Detector(exitFlag, score, vecDynamicObj, vecStaticObj);
+    /*
     /*
     Bomb* pBomb = new Bomb;
     pBomb->SetDirection(0.3, 1);
@@ -91,6 +114,7 @@ SBomber::~SBomber()
             delete vecStaticObj[i];
         }
     }
+    delete collision;
 }
 
 void SBomber::MoveObjects()
@@ -110,8 +134,10 @@ void SBomber::CheckObjects()
 {
     WriteToLog(string(__FUNCTION__) + " was invoked");
 
-    CheckPlaneAndLevelGUI();
-    CheckBombsAndGround();
+   /* CheckPlaneAndLevelGUI();
+    CheckBombsAndGround();*/
+    collision->CheckPlaneAndLevelGUI();
+    collision->CheckBombsAndGround();
 };
 
 void SBomber::CheckPlaneAndLevelGUI()
