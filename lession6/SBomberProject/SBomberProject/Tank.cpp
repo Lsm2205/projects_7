@@ -1,6 +1,5 @@
-
 #include <iostream>
-
+#include "Mediator.h"
 #include "Tank.h"
 #include "MyTools.h"
 
@@ -41,4 +40,20 @@ void Tank::Draw() const
 	cout << "    #####";
 	GotoXY(x,y);
 	cout << " ###########";
+
+	int var;
+	var = rand() % 5;
+	if (var < msg.size()) 
+	{
+		mediator.set_message(msg[var]);
+	}
+	mediator.set_print();
+}
+Tank::Tank(Mediator& m) : mediator(m) 
+{
+	msg.push_back("Penetration!!!");
+	msg.push_back("Hello to sleepwalkers !!))");
+	msg.push_back("Tanks are not afraid of mud");
+	msg.push_back("They don't look at a loaded tank in the muzzle!");
+	msg.push_back("Air,Air,Air!!!");
 }

@@ -1,7 +1,9 @@
 #include <iostream>
-
+#include <string>
 #include "LevelGUI.h"
 #include "MyTools.h"
+
+class Mediator;
 
 using namespace std;
 using namespace MyTools;
@@ -40,6 +42,9 @@ void LevelGUI::Draw() const
     cout << "BombsNum: " << bombsNumber;
     GotoXY(62, 1);
     cout << "Score: " << score;
+
+    GotoXY(25, 20);
+    cout << msg;
 }
 
 void __fastcall LevelGUI::SetParam(uint64_t passedTimeNew, uint64_t fpsNew, uint16_t bombsNumberNew, int16_t scoreNew)
@@ -48,4 +53,27 @@ void __fastcall LevelGUI::SetParam(uint64_t passedTimeNew, uint64_t fpsNew, uint
     fps = fpsNew;
     bombsNumber = bombsNumberNew;
     score = scoreNew;
+}
+void LevelGUI::set_msg(std::string str)
+{
+    stack_Str.push(str);
+
+}
+
+void LevelGUI::pop_msg()
+{
+    seconds = static_cast<int>(passedTime / 1000.0);
+    if (!(stack_Str.empty()))
+    {
+        if (seconds % 3 == 0 && seconds / 3 == sum_msg)
+        {
+            msg = stack_Str.top();
+            stack_Str.pop();
+            ++sum_msg;
+        }
+    }
+    else 
+    {
+        msg = "";
+    }
 }

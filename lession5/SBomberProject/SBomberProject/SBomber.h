@@ -7,7 +7,7 @@
 #include "Bomb.h"
 #include "Ground.h"
 #include "Tank.h"
-
+#include "CollisionDetector.h"
 class SBomber
 {
 public:
@@ -29,7 +29,7 @@ private:
 
     void CheckPlaneAndLevelGUI();
     void CheckBombsAndGround();
-    void __fastcall CheckDestoyableObjects(Bomb* pBomb);
+    //void __fastcall CheckDestoyableObjects(Bomb* pBomb);
 
     void __fastcall DeleteDynamicObj(DynamicObject * pBomb);
     void __fastcall DeleteStaticObj(GameObject* pObj);
@@ -50,4 +50,87 @@ private:
     uint64_t startTime, finishTime, passedTime;
     uint16_t bombsNumber, deltaTime, fps;
     int16_t score;
+
+    Visitor* viz;
+    friend class Bomb;
+
+    Collision_Detector* collision;
+public:
+    class BombIterator {
+    private:
+        std::vector<DynamicObject*> refArr;
+        int Index;
+        DynamicObject* ptr;
+    public:
+        BombIterator(std::vector<DynamicObject*> ref) : refArr(ref), Index(-1), ptr(nullptr) { ++(*this); }
+        void reset() { Index = -1;  ptr = nullptr; }
+
+        BombIterator& operator++() {
+            ++Index;
+            for (; Index < refArr.size(); ++Index) {
+                                              
+                Bomb* pBomb = dynamic_cast<Bomb*>(refArr[Index]);
+                if (pBomb != nullptr) {
+                    ptr = refArr[Index];
+                    break;
+                }
+
+            }
+            if (Index == refArr.size()) {
+                Index = -1;
+                ptr = nullptr;
+            }
+            return *this;
+        }
+        BombIterator& operator++(int) {
+            auto temp = *this;
+            ++(*this);
+            return temp;
+        }
+
+        BombIterator& operator--() {
+            --Index;
+
+            for (; Index >= 0; --Index) {
+                Bomb* pBomb = dynamic_cast<Bomb*>(refArr[Index]);
+                if (pBomb != nullptr) {
+                    ptr = refArr[Index];
+                    break;
+                }
+            }
+            if (Index <= 0) {
+                Index = -1;
+                ptr = nullptr;
+            }
+            return *this;
+        }
+        BombIterator& operator--(int) {
+            auto temp = *this;
+            --(*this);
+            return temp;
+        }
+
+        DynamicObject*& operator*() {
+            return refArr.at(Index);
+        }
+        bool operator==(BombIterator it) {
+            if (ptr == it.ptr && refArr == it.refArr) {
+                return true;
+            }
+            return false;
+        }
+        bool operator!=(BombIterator it) {
+            return !(it == *this);
+        }
+
+    };
+    BombIterator begin() const {
+        BombIterator it(vecDynamicObj);
+        return it;
+    }
+    BombIterator end() const {
+        BombIterator it(vecDynamicObj);
+        it.reset();
+        return it;
+    }
 };

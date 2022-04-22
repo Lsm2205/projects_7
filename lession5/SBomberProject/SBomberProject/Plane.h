@@ -2,6 +2,8 @@
 
 #include "DynamicObject.h"
 
+class DynamicObject;
+
 class Plane : public DynamicObject {
 public:
 
@@ -9,7 +11,8 @@ public:
 
     inline void ChangePlaneY(double dy) { yDirection += dy; }
 
+    void __fastcall Accept(Visitor& v);
+
 private:
 
 };
-

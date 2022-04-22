@@ -1,6 +1,5 @@
-
 #include <iostream>
-
+#include "Visitor.h"
 #include "Plane.h"
 #include "MyTools.h"
 
@@ -18,4 +17,8 @@ void Plane::Draw() const
     cout << "\\\\\\\\";
     GotoXY(x + 3, y + 1);
     cout << "////";
+}
+
+void __fastcall Plane::Accept(Visitor& v) {
+    v.log(this);
 }

@@ -1,7 +1,8 @@
 #pragma once
 
 #include <stdint.h>
-
+#include <stack>
+#include <string>
 #include "GameObject.h"
 
 class LevelGUI : public GameObject {
@@ -17,16 +18,18 @@ public:
     inline void SetFinishX(uint16_t finishXN) { finishX = finishXN; }
 
     void Draw() const override;
-
+    void set_msg(std::string str);
+    void pop_msg();
 private:
-
+    std::stack<std::string> stack_Str;
     uint16_t height;
     uint16_t finishX = 109;
 
     uint64_t passedTime, fps;
     uint16_t bombsNumber;
     int16_t score;
+
+    int seconds = 0;
+    int sum_msg = 0;
+    std::string msg = "";
 };
-
-
-
