@@ -24,7 +24,7 @@ public:
     void DrawFrame();
     void MoveObjects();
     void CheckObjects();
-
+    
 private:
 
     void CheckPlaneAndLevelGUI();
@@ -41,7 +41,9 @@ private:
     std::vector<Bomb*> FindAllBombs() const;
 
     void DropBomb();
-
+    void Clone_Objects();
+    //void AnimateScrolling();
+    
     std::vector<DynamicObject*> vecDynamicObj;
     std::vector<GameObject*> vecStaticObj;
     
